@@ -1,25 +1,19 @@
-class Test(object):
-    def __eq__(self, other):
-        print '1'
-        print self
-        return True
+from query.condition import ConditionMixin
 
-    def __and__(self, other):
-        print '2'
-        print self
-        return True
 
-    def __or__(self, other):
-        print '3'
-        print self
-        return True
+class Test(ConditionMixin):
+    def __init__(self, name):
+        self._name = name
+
+    def to_str(self):
+        return self._name
 
 
 if __name__ == '__main__':
-    t1 = Test()
-    t2 = Test()
-    t3 = Test()
-    t4 = Test()
+    t1 = Test('test.t1')
+    t2 = Test('test.t2')
+    t3 = Test('test.t3')
+    t4 = Test('test.t4')
 
-    t1 == t2 | t3 == t4 & t3 == t1
-    print
+    condition = (t1 == t2) & ((((t1 <= t2) | (t1 > t2)) & ((t1 != t2) | (t1 >= t2))) | t1.contains(t2) | t1.is_not_null())
+    print condition.to_str()
