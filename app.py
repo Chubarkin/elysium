@@ -1,19 +1,16 @@
-from query.condition import ConditionMixin
+from models import Model, Field
 
 
-class Test(ConditionMixin):
-    def __init__(self, name):
-        self._name = name
+class TestModel(Model):
+    __tablename__ = 'test_model'
 
-    def to_str(self):
-        return self._name
+    t1 = Field()
+    t2 = Field()
+    t3 = Field()
+    t4 = Field()
 
 
 if __name__ == '__main__':
-    t1 = Test('test.t1')
-    t2 = Test('test.t2')
-    t3 = Test('test.t3')
-    t4 = Test('test.t4')
 
-    condition = (t1 == t2) & ((((t1 <= t2) | (t1 > t2)) & ((t1 != t2) | (t1 >= t2))) | t1.contains(t2) | t1.is_not_null())
+    condition = (TestModel.t1 == TestModel.t2) & ((((TestModel.t1 <= TestModel.t2) | (TestModel.t1 > TestModel.t2)) & ((TestModel.t1 != TestModel.t2) | (TestModel.t1 >= TestModel.t2))) | TestModel.t1.contains(TestModel.t2) | TestModel.t1.is_not_null())
     print condition.to_str()
