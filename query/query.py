@@ -1,17 +1,16 @@
-from Queue import Queue
-
 from builder import QueryBuilder
 
 
 class Query(object):
     def __init__(self):
         self._query_builder = QueryBuilder()
-        self._commands_queue = Queue()
 
-    def select(self, *args):
+    def select(self, *fields):
+        self._query_builder.add_fields(*fields)
         return self
 
-    def filter(self, *args, **kwargs):
+    def filter(self, *conditions):
+        self._query_builder.add_conditions(*conditions)
         return self
 
     def all(self):
@@ -22,3 +21,7 @@ class Query(object):
 
     def last(self):
         return self
+
+    @property
+    def sql(self):
+        return self._query_builder.build()

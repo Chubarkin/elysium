@@ -49,6 +49,16 @@ class Condition(ConditionMixin):
     def to_str(self):
         return self._to_str(self._operator.priority)
 
+    def get_table_names(self):
+        return self._get_table_names(self)
+
+    def _get_table_names(self, operand):
+        if isinstance(operand, Condition):
+            return self._get_table_names(operand._left_operand) | \
+                self._get_table_names(operand._right_operand)
+        return {operand.table_name} \
+            if hasattr(operand, 'table_name') else set()
+
     def _to_str(self, upper_priority):
         if self._operator.priority and \
                 self._operator.priority < upper_priority:
@@ -65,7 +75,7 @@ class Condition(ConditionMixin):
     def _get_operand_str(self, operand):
         if isinstance(operand, Condition):
             return operand._to_str(self._operator.priority)
-
+        # TODO FIX Bug if operand is not instance of Field, for example int object
         return operand.to_str() if operand else ''
 
     @staticmethod

@@ -1,50 +1,23 @@
-from abc import ABCMeta, abstractmethod
-
-
-from constants import SELECT, FROM, WHERE
+import constants as const
 
 
 class Command(object):
-    __metaclass__ = ABCMeta
     TYPE = NotImplemented
 
-    @abstractmethod
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, args_string):
+        self._args_string = args_string
 
-    @abstractmethod
-    def convert_to_sql(self):
-        pass
+    def to_str(self):
+        return const.COMMAND_TMPL % (self.TYPE, self._args_string)
 
 
 class SelectCommand(Command):
-    TYPE = SELECT
-
-    def __init__(self, *args, **kwargs):
-        self._args = args
-        super(SelectCommand, self).__init__(self, *args, **kwargs)
-
-    def convert_to_sql(self):
-        pass
+    TYPE = const.SELECT
 
 
 class FromCommand(Command):
-    TYPE = FROM
-
-    def __init__(self, *args, **kwargs):
-        self._kwargs = kwargs
-        super(FromCommand, self).__init__(self, *args, **kwargs)
-
-    def convert_to_sql(self):
-        pass
+    TYPE = const.FROM
 
 
 class WhereCommand(Command):
-    TYPE = WHERE
-
-    def __init__(self, *args, **kwargs):
-        self._kwargs = kwargs
-        super(WhereCommand, self).__init__(self, *args, **kwargs)
-
-    def convert_to_sql(self):
-        pass
+    TYPE = const.WHERE
