@@ -1,7 +1,10 @@
 from builder import QueryBuilder
+from query_meta import QueryMetaClass
 
 
 class Query(object):
+    __metaclass__ = QueryMetaClass
+
     def __init__(self):
         self._query_builder = QueryBuilder()
 

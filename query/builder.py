@@ -32,7 +32,8 @@ class QueryBuilder(object):
 
     def build(self):
         # TODO validate tables
-        fields_str = const.FIELDS_SPLITTER.join([field.to_str() for field in self._fields])
+        fields_str = const.FIELDS_SPLITTER.join(
+            [field.to_str() for field in self._fields]) or const.ALL_FIELDS_SELECTOR
         self._commands.append(commands.SelectCommand(fields_str))
 
         tables_str = const.TABLES_SPLITTER.join(self._tables)

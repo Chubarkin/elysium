@@ -2,8 +2,17 @@ SELECT = 'SELECT'
 FROM = 'FROM'
 WHERE = 'WHERE'
 
+ALL_FIELDS_SELECTOR = '*'
 FIELDS_SPLITTER = ', '
 TABLES_SPLITTER = ', '
 CONDITIONS_SPLITTER = ' AND '
 CONDITIONS_TMPL = '(%s)'
 COMMAND_TMPL = '%s %s '
+
+NEXT_OPERATION = {
+    'join': 'on'
+}
+
+PREVIOUS_OPERATION = {
+    'on': 'join',
+}
