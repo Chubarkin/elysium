@@ -24,11 +24,11 @@ class QueryBuilder(object):
         for condition in self._conditions:
             self._tables = self._tables.union(condition.get_table_names())
 
-    def add_joined_tables(self, joined_tables):
-        pass
+    def add_joined_tables(self, joined_table):
+        self._joined_tables.append(joined_table)
 
     def add_joined_conditions(self, joined_conditions):
-        pass
+        self._joined_conditions.append(joined_conditions)
 
     def build(self):
         # TODO validate tables
@@ -39,7 +39,9 @@ class QueryBuilder(object):
         tables_str = const.TABLES_SPLITTER.join(self._tables)
         self._commands.append(commands.FromCommand(tables_str))
 
-        # TODO add join commands
+        for joined_table, joined_condition in zip(self._joined_tables, self._joined_conditions):
+            self._commands.append(commands.JoinCommand(joined_table.__tablename__))
+            self._commands.append(commands.OnCommand(joined_condition.to_str()))
 
         conditions_str = const.CONDITIONS_SPLITTER.join(
             [const.CONDITIONS_TMPL % condition.to_str() for condition in self._conditions])

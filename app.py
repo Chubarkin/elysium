@@ -21,4 +21,4 @@ if __name__ == '__main__':
     print condition.to_str()
     print condition.get_table_names()
 
-    print TestModel.select(TestModel.t1, TestModel.t2).filter(TestModel.t1 == TestModel.t2, NewTestModel.t1 == 'dfgd').sql
+    print TestModel.select(TestModel.t1, TestModel.t2).filter(TestModel.t1 == TestModel.t2).join(NewTestModel, on=NewTestModel.t1.is_not_null()).sql()

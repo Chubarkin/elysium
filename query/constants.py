@@ -1,5 +1,7 @@
 SELECT = 'SELECT'
 FROM = 'FROM'
+JOIN = 'JOIN'
+ON = 'ON'
 WHERE = 'WHERE'
 
 ALL_FIELDS_SELECTOR = '*'
@@ -9,10 +11,10 @@ CONDITIONS_SPLITTER = ' AND '
 CONDITIONS_TMPL = '(%s)'
 COMMAND_TMPL = '%s %s '
 
+VALIDATED_OPERATIONS = {'join', 'on', 'sql'}
+
 NEXT_OPERATION = {
-    'join': 'on'
 }
 
 PREVIOUS_OPERATION = {
-    'on': 'join',
 }

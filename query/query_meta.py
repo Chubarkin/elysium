@@ -1,9 +1,12 @@
+import functools
+
 import constants as const
 
 
 class QueryMetaClass(type):
     @staticmethod
     def _validate_operation_order(operation, operation_name):
+        @functools.wraps(operation)
         def validated(self, *args, **kwargs):
             if getattr(self, '_prev_operation', None) and \
                     const.PREVIOUS_OPERATION.get(operation_name) and \
@@ -23,7 +26,7 @@ class QueryMetaClass(type):
 
     def __new__(metaname, classname, baseclasses, attrs):
         for variable, value in attrs.iteritems():
-            if callable(value):
+            if variable in const.VALIDATED_OPERATIONS:
                 attrs[variable] = \
                     metaname._validate_operation_order(value, variable)
 

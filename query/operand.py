@@ -14,16 +14,14 @@ class Operand(object):
         return isinstance(self._instance, Field)
 
     def to_str(self):
-        from models.field import Field
-        from condition import Condition
-        if isinstance(self._instance, Condition):
-            return self._instance.to_str()
-        elif isinstance(self._instance, Field):
+        if self.is_condition() or self.is_field():
             return self._instance.to_str()
         elif isinstance(self._instance, str):
             return '"%s"' % self._instance
+        elif self._instance:
+            return self._instance
 
-        return self._instance
+        return ''
 
     @property
     def instance(self):

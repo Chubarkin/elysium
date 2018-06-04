@@ -19,5 +19,13 @@ class FromCommand(Command):
     TYPE = const.FROM
 
 
+class JoinCommand(Command):
+    TYPE = const.JOIN
+
+
+class OnCommand(Command):
+    TYPE = const.ON
+
+
 class WhereCommand(Command):
     TYPE = const.WHERE
