@@ -8,7 +8,6 @@ class Model(object):
 
     @classmethod
     def select(cls, *fields):
-        # TODO validate fields
         query = Query()
         return query.select(*fields)
 

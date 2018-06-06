@@ -19,6 +19,22 @@ class FromCommand(Command):
     TYPE = const.FROM
 
 
+class InnerCommand(Command):
+    TYPE = const.INNER
+
+
+class OuterCommand(Command):
+    TYPE = const.OUTER
+
+
+class LeftCommand(Command):
+    TYPE = const.LEFT
+
+
+class RightCommand(Command):
+    TYPE = const.RIGHT
+
+
 class JoinCommand(Command):
     TYPE = const.JOIN
 
