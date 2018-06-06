@@ -1,6 +1,6 @@
 import constants as const
 
-from builder import QueryBuilder
+from factory import factory
 from query_meta import QueryMetaClass
 
 
@@ -8,7 +8,7 @@ class Query(object):
     __metaclass__ = QueryMetaClass
 
     def __init__(self):
-        self._query_builder = QueryBuilder()
+        self._query_builder = factory.get_query_builder()
 
     def select(self, *fields):
         self._query_builder.add_fields(*fields)
