@@ -1,6 +1,3 @@
-DB = 'psycopg2'
-
-
-if DB == 'psycopg2':
-    from postgres_factory import PostgresFactory
-    factory = PostgresFactory()
+# TODO add logic for factory choosing
+from postgres_factory import PostgresFactory
+factory = PostgresFactory()

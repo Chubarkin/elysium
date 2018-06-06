@@ -1,9 +1,10 @@
 import functools
+from abc import ABCMeta
 
 import constants as const
 
 
-class QueryMetaClass(type):
+class QueryMetaClass(ABCMeta):
     @staticmethod
     def _validate_operation_order(operation, operation_name):
         @functools.wraps(operation)

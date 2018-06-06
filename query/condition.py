@@ -1,8 +1,9 @@
-import operators
+import factory
 from operand import Operand
 
 CONDITION_TMPL = '%s %s %s'
 CONDITION_TMPL_WITH_PARENTHESES = '(%s %s %s)'
+operators = factory.factory.get_operators()
 
 
 class ConditionMixin(object):

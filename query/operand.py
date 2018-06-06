@@ -13,6 +13,7 @@ class Operand(object):
         from models.field import Field
         return isinstance(self._instance, Field)
 
+    # TODO FIX BUG WITH PARENTHESES
     def to_str(self):
         if self.is_condition() or self.is_field():
             return self._instance.to_str()

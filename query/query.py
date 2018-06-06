@@ -1,6 +1,5 @@
-import constants as const
+from abc import abstractmethod
 
-from factory import factory
 from query_meta import QueryMetaClass
 
 
@@ -8,45 +7,45 @@ class Query(object):
     __metaclass__ = QueryMetaClass
 
     def __init__(self):
+        from factory import factory
         self._query_builder = factory.get_query_builder()
 
+    @abstractmethod
     def select(self, *fields):
-        self._query_builder.add_fields(*fields)
-        return self
+        pass
 
+    @abstractmethod
     def filter(self, *conditions):
-        self._query_builder.add_conditions(*conditions)
-        return self
+        pass
 
+    @abstractmethod
     def join(self, joined_table, on=None):
-        self._join(joined_table, on=on, join_type=const.INNER_JOIN_TYPE)
-        return self
+        pass
 
+    @abstractmethod
     def outer_join(self, joined_table, on=None):
-        self._join(joined_table, on=on, join_type=const.OUTER_JOIN_TYPE)
-        return self
+        pass
 
+    @abstractmethod
     def left_join(self, joined_table, on=None):
-        self._join(joined_table, on=on, join_type=const.LEFT_JOIN_TYPE)
-        return self
+        pass
 
+    @abstractmethod
     def right_join(self, joined_table, on=None):
-        self._join(joined_table, on=on, join_type=const.RIGHT_JOIN_TYPE)
-        return self
+        pass
 
+    @abstractmethod
     def all(self):
-        return self
+        pass
 
+    @abstractmethod
     def first(self):
-        return self
+        pass
 
+    @abstractmethod
     def last(self):
-        return self
+        pass
 
+    @abstractmethod
     def sql(self):
-        return self._query_builder.build()
-
-    def _join(self, joined_table, on, join_type):
-        self._query_builder.add_joined_tables(joined_table)
-        self._query_builder.add_joined_conditions(on)
-        self._query_builder.add_join_types(join_type)
+        pass

@@ -1,6 +1,5 @@
 from meta_model import ModelMetaClass
-from query.query import Query
-
+from factory import factory
 
 class Model(object):
     __metaclass__ = ModelMetaClass
@@ -8,10 +7,10 @@ class Model(object):
 
     @classmethod
     def select(cls, *fields):
-        query = Query()
+        query = factory.get_query()
         return query.select(*fields)
 
     @classmethod
     def filter(cls, *conditions):
-        query = Query()
+        query = factory.get_query()
         return query.filter(*conditions)
