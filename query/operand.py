@@ -1,4 +1,4 @@
-# TODO Try to remove cyclic imports
+from constants import STRING_TMPL
 
 
 class Operand(object):
@@ -13,13 +13,12 @@ class Operand(object):
         from models.field import Field
         return isinstance(self._instance, Field)
 
-    # TODO FIX BUG WITH PARENTHESES
     def to_str(self):
         if self.is_condition() or self.is_field():
             return self._instance.to_str()
         elif isinstance(self._instance, str):
-            return '"%s"' % self._instance
-        elif self._instance:
+            return STRING_TMPL % self._instance
+        elif self._instance is not None:
             return self._instance
 
         return ''

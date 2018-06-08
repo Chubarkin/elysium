@@ -7,7 +7,10 @@ INNER = 'INNER'
 LEFT = 'LEFT'
 RIGHT = 'RIGHT'
 OUTER = 'OUTER'
+
 COMMAND_TMPL = '%s %s '
+STRING_TMPL = '"%s"'
+CONDITION_TMPL = '(%s %s %s)'
 
 VALIDATED_OPERATIONS = {'join', 'on', 'sql'}
 

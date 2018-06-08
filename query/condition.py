@@ -1,8 +1,7 @@
+from constants import CONDITION_TMPL
 from factory import factory
 from operand import Operand
 
-CONDITION_TMPL = '%s %s %s'
-CONDITION_TMPL_WITH_PARENTHESES = '(%s %s %s)'
 operators = factory.get_operators()
 
 
@@ -49,7 +48,11 @@ class Condition(ConditionMixin):
         self._operator = operator
 
     def to_str(self):
-        return self._to_str(self._operator.priority)
+        left_operand_str = self._left_operand.to_str()
+        right_operand_str = self._right_operand.to_str()
+
+        return CONDITION_TMPL % (
+            left_operand_str, self._operator.string_repr, right_operand_str)
 
     def get_table_names(self):
         return self._get_table_names(Operand(self))
@@ -60,24 +63,11 @@ class Condition(ConditionMixin):
                 self._get_table_names(operand.instance.right_operand)
         return {operand.instance.table_name} if operand.is_field() else set()
 
-    def _to_str(self, upper_priority):
-        if self._operator.priority and \
-                self._operator.priority < upper_priority:
-            tmpl = CONDITION_TMPL_WITH_PARENTHESES
-        else:
-            tmpl = CONDITION_TMPL
-
-        left_operand_str = self._left_operand.to_str()
-        right_operand_str = self._right_operand.to_str()
-
-        return tmpl % (left_operand_str, self._operator.string_repr,
-                       right_operand_str)
-
     @staticmethod
     def _validate(left_operand, right_operand, operator):
-        if operator.priority is None \
-            and (isinstance(left_operand, Condition)
-                 or isinstance(right_operand, Condition)):
+        if operator in [operators.AND, operators.OR] \
+            and not (isinstance(left_operand, Condition)
+                     and isinstance(right_operand, Condition)):
 
             raise Exception()
 

@@ -1,6 +1,6 @@
+from abstract_factory import AbstractFactory
 from backends.postgresql.postgresql_builder import PostgreSQLQueryBuilder
 from backends.postgresql.postgresql_query import PostgreSQLQuery
-from abstract_factory import AbstractFactory
 
 
 class PostgresFactory(AbstractFactory):

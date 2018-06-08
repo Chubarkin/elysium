@@ -1,6 +1,7 @@
 from meta_model import ModelMetaClass
 from factory import factory
 
+
 class Model(object):
     __metaclass__ = ModelMetaClass
     __tablename__ = NotImplemented
