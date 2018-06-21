@@ -4,7 +4,7 @@ import constants as const
 class Command(object):
     TYPE = NotImplemented
 
-    def __init__(self, args_string):
+    def __init__(self, args_string=''):
         self._args_string = args_string
 
     def to_str(self):
@@ -45,3 +45,11 @@ class OnCommand(Command):
 
 class WhereCommand(Command):
     TYPE = const.WHERE
+
+
+class OrderByCommand(Command):
+    TYPE = const.ORDER_BY
+
+
+class DescCommand(Command):
+    TYPE = const.DESC

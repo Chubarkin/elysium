@@ -13,6 +13,7 @@ class PostgreSQLQueryBuilder(QueryBuilder):
         self._joined_tables = list()
         self._joined_conditions = list()
         self._join_types = list()
+        self._ordering_fields = set()
         self._commands = []
 
     def add_tables(self, tables):
@@ -45,6 +46,11 @@ class PostgreSQLQueryBuilder(QueryBuilder):
     def add_join_types(self, join_type):
         self._join_types.append(join_type)
 
+    def add_ordering_fields(self, *fields):
+        for field in fields:
+            if field.table_name in self._tables:
+                self._ordering_fields.add(field)
+
     def build(self):
         fields_str = const.FIELDS_SPLITTER.join(
             [field.to_str() for field in self._fields]) or const.ALL_FIELDS_SELECTOR
@@ -69,5 +75,11 @@ class PostgreSQLQueryBuilder(QueryBuilder):
         conditions_str = const.CONDITIONS_SPLITTER.join(
             [const.CONDITIONS_TMPL % condition.to_str() for condition in self._conditions])
         self._commands.append(commands.WhereCommand(conditions_str))
+
+        ordering_fields_str = const.FIELDS_SPLITTER.join(
+            [const.ORDERING_FIELDS_TMPL % (field.to_str(), commands.DescCommand().to_str())
+             if field.is_descending else field.to_str() for field in self._ordering_fields])
+        if ordering_fields_str:
+            self._commands.append(commands.OrderByCommand(ordering_fields_str))
 
         return ''.join([command.to_str() for command in self._commands])

@@ -27,6 +27,10 @@ class PostgreSQLQuery(Query):
         self._join(joined_table, on=on, join_type=const.RIGHT_JOIN_TYPE)
         return self
 
+    def order_by(self, *fields):
+        self._query_builder.add_ordering_fields(*fields)
+        return self
+
     def all(self):
         return self
 

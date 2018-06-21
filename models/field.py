@@ -7,6 +7,7 @@ class Field(ConditionMixin):
     def __init__(self, field_name=None):
         self._table_name = None
         self._field_name = field_name
+        self._descending = False
 
     def __get__(self, instance, owner):
         self.table_name = owner.__tablename__
@@ -33,3 +34,13 @@ class Field(ConditionMixin):
         return self._table_name
 
     table_name = property(_get_table_name, _set_table_name)
+
+    def desc(self):
+        self._descending = True
+        return self
+
+    @property
+    def is_descending(self):
+        is_descending = self._descending
+        self._descending = False
+        return is_descending
