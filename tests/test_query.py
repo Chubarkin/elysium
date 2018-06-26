@@ -1,5 +1,8 @@
+import mock
 import unittest
+
 from models import Model, Field
+from factory.postgres_factory import PostgresFactory
 
 
 class TestModel(Model):
@@ -7,8 +10,8 @@ class TestModel(Model):
     test_field_two = Field()
 
 
-class TestQuery(unittest.TestCase):
-    # TODO mock factory
+@mock.patch('factory.factory', PostgresFactory())
+class TestPostrgreSQLQuery(unittest.TestCase):
     def test_select_all_fields_sql(self):
         query = TestModel.select().sql()
         self.assertEqual(query, 'SELECT * FROM testmodel')
