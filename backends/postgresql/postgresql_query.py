@@ -7,6 +7,10 @@ class PostgreSQLQuery(Query):
         self._query_builder.add_fields(*fields)
         return self
 
+    def set_table(self, table):
+        self._query_builder.add_tables(table)
+        return self
+
     def filter(self, *conditions):
         self._query_builder.add_conditions(*conditions)
         return self

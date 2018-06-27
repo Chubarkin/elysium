@@ -16,8 +16,9 @@ class PostgreSQLQueryBuilder(QueryBuilder):
         self._ordering_fields = set()
         self._commands = []
 
-    def add_tables(self, tables):
-        pass
+    def add_tables(self, *tables):
+        for table in tables:
+            self._tables.add(table)
 
     def add_fields(self, *fields):
         self._fields = self._fields.union(fields)
@@ -73,8 +74,10 @@ class PostgreSQLQueryBuilder(QueryBuilder):
                 self._commands.append(commands.RightCommand(join_str))
 
         conditions_str = const.CONDITIONS_SPLITTER.join(
-            [const.CONDITIONS_TMPL % condition.to_str() for condition in self._conditions])
-        self._commands.append(commands.WhereCommand(conditions_str))
+            [condition.to_str() for condition in self._conditions])
+
+        if conditions_str:
+            self._commands.append(commands.WhereCommand(conditions_str))
 
         ordering_fields_str = const.FIELDS_SPLITTER.join(
             [const.ORDERING_FIELDS_TMPL % (field.to_str(), commands.DescCommand().to_str())

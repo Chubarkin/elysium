@@ -15,6 +15,10 @@ class Query(object):
         pass
 
     @abstractmethod
+    def set_table(self, table):
+        pass
+
+    @abstractmethod
     def filter(self, *conditions):
         pass
 
