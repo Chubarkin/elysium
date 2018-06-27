@@ -70,4 +70,4 @@ class TestPostrgreSQLQuery(unittest.TestCase):
 
         query = TestModel.select().order_by(TestModel.test_field_one.desc()).sql().rstrip()
         self.assertEqual(query, 'SELECT * FROM testmodel '
-                                'ORDER BY testmodel.test_field_one DESC')
+                                'ORDER BY testmodel.test_field_one DESC  ')
