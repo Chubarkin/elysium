@@ -29,8 +29,10 @@ class TestPostrgreSQLQuery(unittest.TestCase):
         self.assertEqual(query, 'SELECT * FROM testmodel WHERE (testmodel.test_field_one = 2)')
 
         query = TestModel.filter(TestModel.test_field_one == 2, TestModel.test_field_two == 3).sql().rstrip()
-        self.assertEqual(query, 'SELECT * FROM testmodel '
-                                'WHERE (testmodel.test_field_one = 2) AND (testmodel.test_field_two = 3)')
+        self.assertIn(query, ['SELECT * FROM testmodel '
+                              'WHERE (testmodel.test_field_one = 2) AND (testmodel.test_field_two = 3)',
+                              'SELECT * FROM testmodel '
+                              'WHERE (testmodel.test_field_two = 3) AND (testmodel.test_field_one = 2)'])
 
         query = TestModel.filter(TestModelTwo.test_field_two == 2).sql().rstrip()
         self.assertEqual(query, 'SELECT * FROM testmodel, testmodeltwo '
@@ -65,9 +67,11 @@ class TestPostrgreSQLQuery(unittest.TestCase):
         self.assertEqual(query, 'SELECT * FROM testmodel ORDER BY testmodel.test_field_one')
 
         query = TestModel.select().order_by(TestModel.test_field_one, TestModel.test_field_two).sql().rstrip()
-        self.assertEqual(query, 'SELECT * FROM testmodel '
-                                'ORDER BY testmodel.test_field_one, testmodel.test_field_two')
+        self.assertIn(query, ['SELECT * FROM testmodel '
+                              'ORDER BY testmodel.test_field_one, testmodel.test_field_two',
+                              'SELECT * FROM testmodel '
+                              'ORDER BY testmodel.test_field_two, testmodel.test_field_one'])
 
         query = TestModel.select().order_by(TestModel.test_field_one.desc()).sql().rstrip()
         self.assertEqual(query, 'SELECT * FROM testmodel '
-                                'ORDER BY testmodel.test_field_one DESC  ')
+                                'ORDER BY testmodel.test_field_one DESC')
