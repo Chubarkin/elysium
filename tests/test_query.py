@@ -35,8 +35,10 @@ class TestPostrgreSQLQuery(unittest.TestCase):
                               'WHERE (testmodel.test_field_two = 3) AND (testmodel.test_field_one = 2)'])
 
         query = TestModel.filter(TestModelTwo.test_field_two == 2).sql().rstrip()
-        self.assertEqual(query, 'SELECT * FROM testmodel, testmodeltwo '
-                                'WHERE (testmodeltwo.test_field_two = 2)')
+        self.assertIn(query, ['SELECT * FROM testmodel, testmodeltwo '
+                              'WHERE (testmodeltwo.test_field_two = 2)',
+                              'SELECT * FROM testmodeltwo, testmodel '
+                              'WHERE (testmodeltwo.test_field_two = 2)'])
 
     def test_outer_join(self):
         query = TestModel.select().outer_join(

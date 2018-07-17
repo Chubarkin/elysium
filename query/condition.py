@@ -54,14 +54,14 @@ class Condition(ConditionMixin):
         return CONDITION_TMPL % (
             left_operand_str, self._operator.string_repr, right_operand_str)
 
-    def get_table_names(self):
-        return self._get_table_names(Operand(self))
+    def get_models(self):
+        return self._get_models(Operand(self))
 
-    def _get_table_names(self, operand):
+    def _get_models(self, operand):
         if operand.is_condition():
-            return self._get_table_names(operand.instance.left_operand) | \
-                self._get_table_names(operand.instance.right_operand)
-        return {operand.instance.table_name} if operand.is_field() else set()
+            return self._get_models(operand.instance.left_operand) | \
+                self._get_models(operand.instance.right_operand)
+        return {operand.instance.model} if operand.is_field() else set()
 
     @staticmethod
     def _validate(left_operand, right_operand, operator):

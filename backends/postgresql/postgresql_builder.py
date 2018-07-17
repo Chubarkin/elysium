@@ -7,37 +7,38 @@ from query import commands
 
 class PostgreSQLQueryBuilder(QueryBuilder):
     def __init__(self):
-        self._tables = set()
+        self._models = set()
         self._fields = set()
         self._conditions = set()
-        self._joined_tables = list()
+        self._joined_models = list()
         self._joined_conditions = list()
         self._join_types = list()
         self._ordering_fields = set()
         self._commands = []
 
-    def add_tables(self, *tables):
-        for table in tables:
-            self._tables.add(table)
+    def add_models(self, *_models):
+        for model in _models:
+            self._models.add(model)
 
     def add_fields(self, *fields):
         self._fields = self._fields.union(fields)
         for field in self._fields:
             if not isinstance(field, models.Field):
                 raise Exception()
-            self._tables.add(field.table_name)
+            self._models.add(field.model)
 
     def add_conditions(self, *conditions):
         self._conditions = self._conditions.union(conditions)
         for condition in self._conditions:
             if not isinstance(condition, query.condition.Condition):
                 raise Exception()
-            self._tables = self._tables.union(condition.get_table_names())
+            self._models = self._models.union(condition.get_models())
 
-    def add_joined_tables(self, joined_table):
-        if not issubclass(joined_table, models.Model):
+    def add_joined_models(self, joined_model):
+        if not isinstance(joined_model, type) or \
+                not issubclass(joined_model, models.Model):
             raise Exception()
-        self._joined_tables.append(joined_table)
+        self._joined_models.append(joined_model)
 
     def add_joined_conditions(self, joined_conditions):
         if not isinstance(joined_conditions, query.condition.Condition):
@@ -49,7 +50,9 @@ class PostgreSQLQueryBuilder(QueryBuilder):
 
     def add_ordering_fields(self, *fields):
         for field in fields:
-            if field.table_name in self._tables:
+            if not isinstance(field, models.Field):
+                raise Exception()
+            if field.model in self._models:
                 self._ordering_fields.add(field)
 
     def build(self):
@@ -57,12 +60,13 @@ class PostgreSQLQueryBuilder(QueryBuilder):
             [field.to_str() for field in self._fields]) or const.ALL_FIELDS_SELECTOR
         self._commands.append(commands.SelectCommand(fields_str))
 
-        tables_str = const.TABLES_SPLITTER.join(self._tables)
+        tables_str = const.TABLES_SPLITTER.join([model.__tablename__ for model in filter(
+            lambda x: x not in self._joined_models, self._models)])
         self._commands.append(commands.FromCommand(tables_str))
 
-        for join_type, joined_table, joined_condition in zip(
-                self._join_types, self._joined_tables, self._joined_conditions):
-            join_str = ''.join([commands.JoinCommand(joined_table.__tablename__).to_str(),
+        for join_type, joined_model, joined_condition in zip(
+                self._join_types, self._joined_models, self._joined_conditions):
+            join_str = ''.join([commands.JoinCommand(joined_model.__tablename__).to_str(),
                                 commands.OnCommand(joined_condition.to_str()).to_str()])
             if join_type == const.INNER_JOIN_TYPE:
                 self._commands.append(commands.InnerCommand(join_str))

@@ -7,8 +7,8 @@ class PostgreSQLQuery(Query):
         self._query_builder.add_fields(*fields)
         return self
 
-    def set_table(self, table):
-        self._query_builder.add_tables(table)
+    def set_model(self, model):
+        self._query_builder.add_models(model)
         return self
 
     def filter(self, *conditions):
@@ -47,7 +47,7 @@ class PostgreSQLQuery(Query):
     def sql(self):
         return self._query_builder.build()
 
-    def _join(self, joined_table, on, join_type):
-        self._query_builder.add_joined_tables(joined_table)
+    def _join(self, joined_model, on, join_type):
+        self._query_builder.add_joined_models(joined_model)
         self._query_builder.add_joined_conditions(on)
         self._query_builder.add_join_types(join_type)

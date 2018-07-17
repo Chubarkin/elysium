@@ -10,11 +10,11 @@ class Model(object):
     def select(cls, *fields):
         # TODO remove duplicate code
         query = factory.get_query()
-        query.set_table(cls.__tablename__)
+        query.set_model(cls)
         return query.select(*fields)
 
     @classmethod
     def filter(cls, *conditions):
         query = factory.get_query()
-        query.set_table(cls.__tablename__)
+        query.set_model(cls)
         return query.filter(*conditions)

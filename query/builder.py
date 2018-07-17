@@ -5,7 +5,7 @@ class QueryBuilder(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def add_tables(self, tables):
+    def add_models(self, models):
         pass
 
     @abstractmethod
@@ -17,7 +17,7 @@ class QueryBuilder(object):
         pass
 
     @abstractmethod
-    def add_joined_tables(self, joined_table):
+    def add_joined_models(self, joined_model):
         pass
 
     @abstractmethod

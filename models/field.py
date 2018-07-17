@@ -5,16 +5,16 @@ FIELD_NAME_TMPL = '%s.%s'
 
 class Field(ConditionMixin):
     def __init__(self, field_name=None):
-        self._table_name = None
+        self._model = None
         self._field_name = field_name
         self._descending = False
 
     def __get__(self, instance, owner):
-        self.table_name = owner.__tablename__
+        self.model = owner
         return self
 
     def to_str(self, alias=None):
-        table_name = alias or self._table_name
+        table_name = alias or self._model.__tablename__
         return FIELD_NAME_TMPL % (table_name, self._field_name)
 
     def _set_field_name(self, field_name):
@@ -26,14 +26,14 @@ class Field(ConditionMixin):
 
     field_name = property(_get_field_name, _set_field_name)
 
-    def _set_table_name(self, table_name):
-        if not self._table_name:
-            self._table_name = table_name
+    def _set_model(self, model):
+        if not self._model:
+            self._model = model
 
-    def _get_table_name(self):
-        return self._table_name
+    def _get_model(self):
+        return self._model
 
-    table_name = property(_get_table_name, _set_table_name)
+    model = property(_get_model, _set_model)
 
     def desc(self):
         self._descending = True

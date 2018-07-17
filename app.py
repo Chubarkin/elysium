@@ -19,7 +19,6 @@ if __name__ == '__main__':
 
     condition = (NewTestModel.t1 == TestModel.t2) & ((((TestModel.t1 <= TestModel.t2) | (TestModel.t1 > TestModel.t2)) & ((TestModel.t1 != TestModel.t2) | (TestModel.t1 >= TestModel.t2))) | TestModel.t1.contains(TestModel.t2) | TestModel.t1.is_not_null())
     print condition.to_str()
-    print condition.get_table_names()
 
     condition = (NewTestModel.t1 >= 0) | (NewTestModel.t1 == 1)
     print condition.to_str()

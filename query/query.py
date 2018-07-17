@@ -15,7 +15,7 @@ class Query(object):
         pass
 
     @abstractmethod
-    def set_table(self, table):
+    def set_model(self, model):
         pass
 
     @abstractmethod
