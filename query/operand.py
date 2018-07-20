@@ -19,7 +19,7 @@ class Operand(object):
         elif isinstance(self._instance, str):
             return STRING_TMPL % self._instance
         elif self._instance is not None:
-            return self._instance
+            return str(self._instance)
 
         return ''
 

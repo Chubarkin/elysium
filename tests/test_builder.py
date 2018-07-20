@@ -70,8 +70,13 @@ class TestPostgreSQLQueryBuilder(unittest.TestCase):
         self._query_builder.add_conditions(TestModel.test_field_two > 2)
         self._query_builder.add_ordering_fields(TestModelTwo.test_field_two.desc())
         sql_query = self._query_builder.build().rstrip()
-        self.assertEqual(sql_query, 'SELECT testmodel.test_field_one, testmodeltwo.test_field_one '
-                                    'FROM testmodel '
-                                    'INNER JOIN testmodeltwo ON (testmodel.test_field_one = testmodeltwo.test_field_two)  '
-                                    'WHERE (testmodel.test_field_two > 2) '
-                                    'ORDER BY testmodeltwo.test_field_two DESC')
+        self.assertIn(sql_query, ['SELECT testmodel.test_field_one, testmodeltwo.test_field_one '
+                                  'FROM testmodel '
+                                  'INNER JOIN testmodeltwo ON (testmodel.test_field_one = testmodeltwo.test_field_two)  '
+                                  'WHERE (testmodel.test_field_two > 2) '
+                                  'ORDER BY testmodeltwo.test_field_two DESC',
+                                  'SELECT testmodeltwo.test_field_one, testmodel.test_field_one '
+                                  'FROM testmodel '
+                                  'INNER JOIN testmodeltwo ON (testmodel.test_field_one = testmodeltwo.test_field_two)  '
+                                  'WHERE (testmodel.test_field_two > 2) '
+                                  'ORDER BY testmodeltwo.test_field_two DESC'])
