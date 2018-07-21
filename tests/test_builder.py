@@ -1,3 +1,4 @@
+import mock
 import unittest
 
 from models import Model, Field
@@ -29,10 +30,13 @@ class TestPostgreSQLQueryBuilder(unittest.TestCase):
         # TODO Add exceptions
         self.assertRaises(Exception, self._query_builder.add_fields, 'Not field instance')
 
-    def test_add_conditions(self):
+    @mock.patch('query.condition.Condition.get_models')
+    def test_add_conditions(self, get_models):
+        get_models.return_value = {TestModel}
         self._query_builder.add_conditions(TestModel.test_field_one == TestModelTwo.test_field_one)
         self.assertEqual(len(self._query_builder._conditions), 1)
         self.assertIsInstance(self._query_builder._conditions.pop(), condition.Condition)
+        self.assertEqual(self._query_builder._models, {TestModel})
         self.assertRaises(Exception, self._query_builder.add_conditions, 'Not condition instance')
 
     def test_add_joined_models(self):

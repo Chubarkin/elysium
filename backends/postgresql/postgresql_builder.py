@@ -56,14 +56,27 @@ class PostgreSQLQueryBuilder(QueryBuilder):
                 self._ordering_fields.add(field)
 
     def build(self):
+        self._construct_commands()
+        return ''.join([command.to_str() for command in self._commands])
+
+    def _construct_commands(self):
+        self._add_select_command()
+        self._add_from_command()
+        self._add_join_commands()
+        self._add_where_command()
+        self._add_order_by_command()
+
+    def _add_select_command(self):
         fields_str = const.FIELDS_SPLITTER.join(
             [field.to_str() for field in self._fields]) or const.ALL_FIELDS_SELECTOR
         self._commands.append(commands.SelectCommand(fields_str))
 
+    def _add_from_command(self):
         tables_str = const.TABLES_SPLITTER.join([model.__tablename__ for model in filter(
             lambda x: x not in self._joined_models, self._models)])
         self._commands.append(commands.FromCommand(tables_str))
 
+    def _add_join_commands(self):
         for join_type, joined_model, joined_condition in zip(
                 self._join_types, self._joined_models, self._joined_conditions):
             join_str = ''.join([commands.JoinCommand(joined_model.__tablename__).to_str(),
@@ -77,16 +90,16 @@ class PostgreSQLQueryBuilder(QueryBuilder):
             elif join_type == const.RIGHT_JOIN_TYPE:
                 self._commands.append(commands.RightCommand(join_str))
 
+    def _add_where_command(self):
         conditions_str = const.CONDITIONS_SPLITTER.join(
             [condition.to_str() for condition in self._conditions])
 
         if conditions_str:
             self._commands.append(commands.WhereCommand(conditions_str))
 
+    def _add_order_by_command(self):
         ordering_fields_str = const.FIELDS_SPLITTER.join(
             [const.ORDERING_FIELDS_TMPL % (field.to_str(), commands.DescCommand().to_str())
              if field.is_descending else field.to_str() for field in self._ordering_fields])
         if ordering_fields_str:
             self._commands.append(commands.OrderByCommand(ordering_fields_str))
-
-        return ''.join([command.to_str() for command in self._commands])
