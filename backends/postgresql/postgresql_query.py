@@ -5,6 +5,7 @@ from query.query import Query
 class PostgreSQLQuery(Query):
     def select(self, *fields):
         self._query_builder.add_fields(*fields)
+        self._query_builder.add_models_from_fields()
         return self
 
     def set_model(self, model):
@@ -13,6 +14,7 @@ class PostgreSQLQuery(Query):
 
     def filter(self, *conditions):
         self._query_builder.add_conditions(*conditions)
+        self._query_builder.add_models_from_conditions()
         return self
 
     def join(self, joined_table, on=None):

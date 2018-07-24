@@ -25,6 +25,7 @@ class TestPostrgreSQLQuery(unittest.TestCase):
         query = self.query.select()
         self.query._query_builder.add_fields.return_value = None
         self.assertTrue(self.query._query_builder.add_fields.called)
+        self.assertTrue(self.query._query_builder.add_models_from_fields.called)
         self.assertIs(query, self.query)
 
     def test_filter(self):
