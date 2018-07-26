@@ -53,3 +53,11 @@ class OrderByCommand(Command):
 
 class DescCommand(Command):
     TYPE = const.DESC
+
+
+class InsertIntoCommand(Command):
+    TYPE = const.INSERT_INTO
+
+
+class ValuesCommand(Command):
+    TYPE = const.VALUES

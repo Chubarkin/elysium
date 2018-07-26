@@ -1,4 +1,5 @@
 import constants as const
+from query.constants import INSERT_QUERY_TYPE
 from query.query import Query
 
 
@@ -44,6 +45,11 @@ class PostgreSQLQuery(Query):
         return self
 
     def last(self):
+        return self
+
+    def save(self, instance):
+        self._query_builder.set_query_type(INSERT_QUERY_TYPE)
+        self._query_builder.add_insertion_data(instance.__dict__)
         return self
 
     def sql(self):

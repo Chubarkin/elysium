@@ -2,9 +2,11 @@ import constants as const
 import models
 import query.condition
 from query.builder import QueryBuilder
+from query.constants import SELECT_QUERY_TYPE, INSERT_QUERY_TYPE
 from query import commands
 
 
+# TODO Split into classes for Select, Insert and etc.
 class PostgreSQLQueryBuilder(QueryBuilder):
     def __init__(self):
         self._models = set()
@@ -14,7 +16,10 @@ class PostgreSQLQueryBuilder(QueryBuilder):
         self._joined_conditions = []
         self._join_types = []
         self._ordering_fields = []
+        self._insertion_fields = []
+        self._insertion_values = []
         self._commands = []
+        self._query_type = SELECT_QUERY_TYPE
 
     def add_models(self, *_models):
         for model in _models:
@@ -61,16 +66,37 @@ class PostgreSQLQueryBuilder(QueryBuilder):
             if field.model in self._models:
                 self._ordering_fields.append(field)
 
+    def add_insertion_data(self, data):
+        # TODO ADD validation and transformation
+        for field, value in data.iteritems():
+            self._insertion_fields.append(field)
+            self._insertion_values.append(str(value))
+
     def build(self):
         self._add_commands()
         return ''.join([command.to_str() for command in self._commands])
 
+    def set_query_type(self, query_type):
+        if query_type not in [SELECT_QUERY_TYPE, INSERT_QUERY_TYPE]:
+            return
+        self._query_type = query_type
+
     def _add_commands(self):
+        if self._query_type == SELECT_QUERY_TYPE:
+            self._add_select_query_commands()
+        elif self._query_type == INSERT_QUERY_TYPE:
+            self._add_insert_query_commands()
+
+    def _add_select_query_commands(self):
         self._add_select_command()
         self._add_from_command()
         self._add_join_commands()
         self._add_where_command()
         self._add_order_by_command()
+
+    def _add_insert_query_commands(self):
+        self._add_insert_into_command()
+        self._add_values_command()
 
     def _add_select_command(self):
         fields_str = self._get_fields_string()
@@ -98,6 +124,15 @@ class PostgreSQLQueryBuilder(QueryBuilder):
         ordering_fields_str = self._get_ordering_fields_string()
         if ordering_fields_str:
             self._commands.append(commands.OrderByCommand(ordering_fields_str))
+
+    def _add_insert_into_command(self):
+        table = self._get_tables_string()
+        self._commands.append(commands.InsertIntoCommand(
+            const.INSERTION_TMPL % (table, const.FIELDS_SPLITTER.join(self._insertion_fields))))
+
+    def _add_values_command(self):
+        self._commands.append(commands.ValuesCommand(
+            const.VALUES_TMPL % const.FIELDS_SPLITTER.join(self._insertion_values)))
 
     def _get_fields_string(self):
         return const.FIELDS_SPLITTER.join(

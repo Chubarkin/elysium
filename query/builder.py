@@ -29,5 +29,13 @@ class QueryBuilder(object):
         pass
 
     @abstractmethod
+    def add_insertion_data(self, data):
+        pass
+
+    @abstractmethod
     def build(self):
+        pass
+
+    @abstractmethod
+    def set_query_type(self, query_type):
         pass

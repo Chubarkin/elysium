@@ -6,15 +6,15 @@ class Model(object):
     __metaclass__ = ModelMetaClass
     __tablename__ = NotImplemented
 
-    @classmethod
-    def select(cls, *fields):
-        # TODO remove duplicate code
-        query = factory.get_query()
-        query.set_model(cls)
-        return query.select(*fields)
+    def __init__(self, **kwargs):
+        for field in self._fields:
+            setattr(self, field, None)
 
-    @classmethod
-    def filter(cls, *conditions):
-        query = factory.get_query()
-        query.set_model(cls)
-        return query.filter(*conditions)
+        for field, value in kwargs.iteritems():
+            if field not in self._fields:
+                raise Exception()
+            setattr(self, field, value)
+
+    def save(self):
+        query = self.__class__.get_initial_query()
+        return query.save(self)

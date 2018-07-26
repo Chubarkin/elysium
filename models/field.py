@@ -4,6 +4,8 @@ FIELD_NAME_TMPL = '%s.%s'
 
 
 class Field(ConditionMixin):
+    _python_type = None
+
     def __init__(self, field_name=None):
         self._model = None
         self._field_name = field_name
@@ -44,3 +46,7 @@ class Field(ConditionMixin):
         is_descending = self._descending
         self._descending = False
         return is_descending
+
+
+class IntegerField(Field):
+    _python_type = int

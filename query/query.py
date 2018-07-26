@@ -51,5 +51,9 @@ class Query(object):
         pass
 
     @abstractmethod
+    def save(self, instance):
+        pass
+
+    @abstractmethod
     def sql(self):
         pass
