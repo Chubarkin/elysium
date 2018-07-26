@@ -1,6 +1,7 @@
 # TODO try remove cycling imports
 from field import Field
 from factory import factory
+from query.constants import SELECT_QUERY_TYPE
 
 
 class ModelMetaClass(type):
@@ -18,14 +19,14 @@ class ModelMetaClass(type):
             .__new__(metaname, classname, baseclasses, attrs)
 
     def select(cls, *fields):
-        query = cls.get_initial_query()
+        query = cls.get_initial_query(SELECT_QUERY_TYPE)
         return query.select(*fields)
 
     def filter(cls, *conditions):
-        query = cls.get_initial_query()
+        query = cls.get_initial_query(SELECT_QUERY_TYPE)
         return query.filter(*conditions)
 
-    def get_initial_query(cls):
-        query = factory.get_query()
+    def get_initial_query(cls, query_type):
+        query = factory.get_query(query_type)
         query.set_model(cls)
         return query

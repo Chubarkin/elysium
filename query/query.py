@@ -6,9 +6,9 @@ from query_meta import QueryMetaClass
 class Query(object):
     __metaclass__ = QueryMetaClass
 
-    def __init__(self):
+    def __init__(self, query_type):
         from factory import factory
-        self._query_builder = factory.get_query_builder()
+        self._query_builder = factory.get_query_builder(query_type)
 
     @abstractmethod
     def select(self, *fields):

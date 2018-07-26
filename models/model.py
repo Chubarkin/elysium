@@ -1,5 +1,5 @@
 from meta_model import ModelMetaClass
-from factory import factory
+from query.constants import INSERT_QUERY_TYPE
 
 
 class Model(object):
@@ -16,5 +16,5 @@ class Model(object):
             setattr(self, field, value)
 
     def save(self):
-        query = self.__class__.get_initial_query()
+        query = self.__class__.get_initial_query(INSERT_QUERY_TYPE)
         return query.save(self)
