@@ -1,6 +1,6 @@
 from abstract_factory import AbstractFactory
-from backends.postgresql.postgresql_builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
-from backends.postgresql.postgresql_query import PostgreSQLQuery
+from backends.postgresql.builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
+from backends.postgresql.query import PostgreSQLQuery
 from query.constants import SELECT_QUERY_TYPE, INSERT_QUERY_TYPE
 
 

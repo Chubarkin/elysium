@@ -1,4 +1,6 @@
-import constants as const
+from __future__ import absolute_import
+
+import backends.postgresql.constants as const
 from query.query import Query
 
 

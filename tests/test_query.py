@@ -2,7 +2,7 @@ import mock
 import unittest
 
 from models import Model, Field
-from backends.postgresql.postgresql_query import PostgreSQLQuery
+from backends.postgresql.query import PostgreSQLQuery
 from query.constants import SELECT_QUERY_TYPE
 
 
@@ -17,7 +17,7 @@ class TestModelTwo(Model):
 
 
 class TestPostrgreSQLQuery(unittest.TestCase):
-    prefix = 'backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder.'
+    prefix = 'backends.postgresql.builder.PostgreSQLSelectQueryBuilder.'
 
     def setUp(self):
         self.query = PostgreSQLQuery(SELECT_QUERY_TYPE)
@@ -39,28 +39,28 @@ class TestPostrgreSQLQuery(unittest.TestCase):
         self.assertTrue(add_conditions.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.postgresql_query.PostgreSQLQuery._join')
+    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
     def test_outer_join(self, _join):
         _join.return_value = None
         query = self.query.outer_join(TestModel)
         self.assertTrue(_join.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.postgresql_query.PostgreSQLQuery._join')
+    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
     def test_join(self, _join):
         _join.return_value = None
         query = self.query.join(TestModel)
         self.assertTrue(_join.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.postgresql_query.PostgreSQLQuery._join')
+    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
     def test_left_join(self, _join):
         _join.return_value = None
         query = self.query.left_join(TestModel)
         self.assertTrue(_join.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.postgresql_query.PostgreSQLQuery._join')
+    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
     def test_right_join(self, _join):
         _join.return_value = None
         query = self.query.left_join(TestModel)

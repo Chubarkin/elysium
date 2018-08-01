@@ -3,7 +3,7 @@ import unittest
 
 from models import Model, Field
 from query import condition, commands
-from backends.postgresql.postgresql_builder import PostgreSQLSelectQueryBuilder
+from backends.postgresql.builder import PostgreSQLSelectQueryBuilder
 
 
 class TestModel(Model):
@@ -21,7 +21,7 @@ class TestModelTwo(Model):
 class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
     def setUp(self):
         self._query_builder = PostgreSQLSelectQueryBuilder()
-        self._prefix = 'backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder.'
+        self._prefix = 'backends.postgresql.builder.PostgreSQLSelectQueryBuilder.'
 
     def test_add_tables(self):
         self._query_builder.add_model(TestModel)
@@ -76,7 +76,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder.add_ordering_fields(TestModelTwo.test_field_one)
         self.assertEqual(self._query_builder._ordering_fields, [TestModel.test_field_one])
 
-    @mock.patch('backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder._add_commands')
+    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._add_commands')
     @mock.patch('query.commands.SelectCommand.to_str')
     def test_build(self, command_to_str, _add_commands):
         command_to_str.return_value = 'SELECT *'
@@ -109,7 +109,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         for patch in patches:
             patch.stop()
 
-    @mock.patch('backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder._get_fields_string')
+    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_fields_string')
     def test__add_select_command(self, _get_fields_string):
         self._query_builder._commands = []
         _get_fields_string.return_value = '*'
@@ -121,7 +121,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._add_select_command()
         self.assertIsInstance(self._query_builder._commands[0], commands.SelectCommand)
 
-    @mock.patch('backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder._get_tables_string')
+    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_tables_string')
     def test__add_from_command(self, _get_tables_string):
         _get_tables_string.return_value = 'test'
         self._query_builder._add_from_command()
@@ -130,8 +130,8 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         _get_tables_string.return_value = ''
         self.assertRaises(Exception, self._query_builder._add_from_command)
 
-    @mock.patch('backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder._get_join_string')
-    @mock.patch('backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder._get_join_type_command')
+    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_string')
+    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_type_command')
     def test__add_join_commands(self, _get_join_type_command, _get_join_string):
         _get_join_string.return_value = 'test'
         _get_join_type_command.return_value = commands.RightCommand
@@ -146,7 +146,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._add_join_commands()
         self.assertIsInstance(self._query_builder._commands[0], commands.RightCommand)
 
-    @mock.patch('backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder._get_conditions_string')
+    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_conditions_string')
     def test__add_where_command(self, _get_conditions_string):
         _get_conditions_string.return_value = ''
         self._query_builder._add_where_command()
@@ -156,7 +156,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._add_where_command()
         self.assertIsInstance(self._query_builder._commands[0], commands.WhereCommand)
 
-    @mock.patch('backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder._get_ordering_fields_string')
+    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_ordering_fields_string')
     def test__add_order_by_command(self, _get_ordering_fields_string):
         _get_ordering_fields_string.return_value = ''
         self._query_builder._add_order_by_command()
@@ -248,7 +248,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         ordering_str = self._query_builder._get_ordering_fields_string()
         self.assertIn(ordering_str, 'test, test DESC')
 
-    @mock.patch('backends.postgresql.postgresql_builder.const')
+    @mock.patch('backends.postgresql.builder.const')
     def test__get_join_type_command(self, constants):
         constants.INNER_JOIN_TYPE = 0
         constants.OUTER_JOIN_TYPE = 1
