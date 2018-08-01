@@ -1,3 +1,9 @@
-# TODO add logic for factory choosing
 from elysium.factory.postgres_factory import PostgresFactory
-factory = PostgresFactory()
+from elysium import config
+
+
+if config['DATABASE']['DBMS'] == 'postgresql':
+    factory = PostgresFactory()
+else:
+    raise Exception()
+
