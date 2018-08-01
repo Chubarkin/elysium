@@ -1,12 +1,12 @@
 import mock
 import unittest
 
-from models import Model, Field
-from backends.postgresql import operators
-from factory.postgres_factory import PostgresFactory
-from query.condition import Condition, ConditionMixin
-from query.operand import Operand
-from query.operator import Operator
+from elysium.models import Model, Field
+from elysium.backends.postgresql import operators
+from elysium.factory.postgres_factory import PostgresFactory
+from elysium.query.condition import Condition, ConditionMixin
+from elysium.query.operand import Operand
+from elysium.query.operator import Operator
 
 
 class TestModel(Model):
@@ -34,13 +34,13 @@ class TestCondition(unittest.TestCase):
         models = self.condition._get_models(Operand(self.condition))
         self.assertEqual(models, {TestModel, TestModelTwo})
 
-    @mock.patch('factory.factory', PostgresFactory())
+    @mock.patch('elysium.factory.factory', PostgresFactory())
     def test__validate(self):
         self.assertRaises(Exception, self.condition._validate,
                           TestModelTwo.test_field_one, TestModelTwo.test_field_two, operators.AND)
 
 
-@mock.patch('factory.factory', PostgresFactory())
+@mock.patch('elysium.factory.factory', PostgresFactory())
 class TestConditionMixin(unittest.TestCase):
     def setUp(self):
         self.first_instance = ConditionMixin()

@@ -1,6 +1,6 @@
-from constants import CONDITION_TMPL
-from factory import factory
-from operand import Operand
+from elysium.query.constants import CONDITION_TMPL
+from elysium.factory import factory
+from elysium.query.operand import Operand
 
 operators = factory.get_operators()
 

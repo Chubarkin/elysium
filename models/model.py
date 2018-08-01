@@ -1,5 +1,5 @@
-from meta_model import ModelMetaClass
-from query.constants import INSERT_QUERY_TYPE
+from elysium.models.meta_model import ModelMetaClass
+from elysium.query.constants import INSERT_QUERY_TYPE
 
 
 class Model(object):

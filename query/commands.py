@@ -1,4 +1,4 @@
-import constants as const
+import elysium.query.constants as const
 
 
 class Command(object):

@@ -1,7 +1,7 @@
 # TODO try remove cycling imports
-from field import Field
-from factory import factory
-from query.constants import SELECT_QUERY_TYPE
+from elysium.models.field import Field
+from elysium.factory import factory
+from elysium.query.constants import SELECT_QUERY_TYPE
 
 
 class ModelMetaClass(type):

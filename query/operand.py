@@ -1,4 +1,4 @@
-from constants import STRING_TMPL
+from elysium.query.constants import STRING_TMPL
 
 
 class Operand(object):
@@ -10,7 +10,7 @@ class Operand(object):
         return isinstance(self._instance, Condition)
 
     def is_field(self):
-        from models.field import Field
+        from elysium.models.field import Field
         return isinstance(self._instance, Field)
 
     def to_str(self):

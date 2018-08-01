@@ -1,9 +1,9 @@
 import mock
 import unittest
 
-from models import Model, Field
-from backends.postgresql.query import PostgreSQLQuery
-from query.constants import SELECT_QUERY_TYPE
+from elysium.models import Model, Field
+from elysium.backends.postgresql.query import PostgreSQLQuery
+from elysium.query.constants import SELECT_QUERY_TYPE
 
 
 class TestModel(Model):
@@ -17,7 +17,7 @@ class TestModelTwo(Model):
 
 
 class TestPostrgreSQLQuery(unittest.TestCase):
-    prefix = 'backends.postgresql.builder.PostgreSQLSelectQueryBuilder.'
+    prefix = 'elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder.'
 
     def setUp(self):
         self.query = PostgreSQLQuery(SELECT_QUERY_TYPE)
@@ -39,28 +39,28 @@ class TestPostrgreSQLQuery(unittest.TestCase):
         self.assertTrue(add_conditions.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
+    @mock.patch('elysium.backends.postgresql.query.PostgreSQLQuery._join')
     def test_outer_join(self, _join):
         _join.return_value = None
         query = self.query.outer_join(TestModel)
         self.assertTrue(_join.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
+    @mock.patch('elysium.backends.postgresql.query.PostgreSQLQuery._join')
     def test_join(self, _join):
         _join.return_value = None
         query = self.query.join(TestModel)
         self.assertTrue(_join.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
+    @mock.patch('elysium.backends.postgresql.query.PostgreSQLQuery._join')
     def test_left_join(self, _join):
         _join.return_value = None
         query = self.query.left_join(TestModel)
         self.assertTrue(_join.called)
         self.assertIs(query, self.query)
 
-    @mock.patch('backends.postgresql.query.PostgreSQLQuery._join')
+    @mock.patch('elysium.backends.postgresql.query.PostgreSQLQuery._join')
     def test_right_join(self, _join):
         _join.return_value = None
         query = self.query.left_join(TestModel)
@@ -93,5 +93,5 @@ class TestPostrgreSQLQuery(unittest.TestCase):
     def test_sql(self, build):
         build.return_value = 'test'
         query = self.query.sql()
-        self.assertEqual(query, 'test')
+        self.assertEqual(query, 'test1')
 

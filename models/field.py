@@ -1,6 +1,6 @@
 from datetime import date
 
-from query.condition import ConditionMixin
+from elysium.query.condition import ConditionMixin
 
 FIELD_NAME_TMPL = '%s.%s'
 

@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
-import backends.postgresql.constants as const
-from query.query import Query
+import elysium.backends.postgresql.constants as const
+from elysium.query.query import Query
 
 
 class PostgreSQLQuery(Query):

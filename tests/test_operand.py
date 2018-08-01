@@ -1,10 +1,10 @@
 import mock
 import unittest
 
-from models import Model, Field
-from query.operand import Operand
-from query.condition import Condition
-from query.operator import Operator
+from elysium.models import Model, Field
+from elysium.query.operand import Operand
+from elysium.query.condition import Condition
+from elysium.query.operator import Operator
 
 
 class TestModel(Model):
@@ -29,8 +29,8 @@ class TestOperand(unittest.TestCase):
         operand = Operand(TestModel.test_field_one)
         self.assertTrue(operand.is_field())
 
-    @mock.patch('query.condition.Condition.to_str')
-    @mock.patch('models.field.Field.to_str')
+    @mock.patch('elysium.query.condition.Condition.to_str')
+    @mock.patch('elysium.models.field.Field.to_str')
     def test_to_str(self, field_to_str, condition_to_str):
         condition_to_str.return_value = 'test_condition'
         field_to_str.return_value = 'test_field'

@@ -1,4 +1,4 @@
-from query.operator import Operator
+from elysium.query.operator import Operator
 
 
 AND = Operator('AND')

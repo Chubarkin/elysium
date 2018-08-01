@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
-import backends.postgresql.constants as const
-import models
-import query.condition
-from query.builder import SelectQueryBuilder, InsertQueryBuilder
-from query import commands
+import elysium.backends.postgresql.constants as const
+import elysium.models
+import elysium.query.condition
+from elysium.query.builder import SelectQueryBuilder, InsertQueryBuilder
+from elysium.query import commands
 
 
 # TODO Split into classes for Select, Insert and etc.
@@ -24,7 +24,7 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_fields(self, *fields):
         for field in fields:
-            if not isinstance(field, models.Field):
+            if not isinstance(field, elysium.models.Field):
                 raise Exception()
         self._fields |= set(fields)
 
@@ -34,7 +34,7 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_conditions(self, *conditions):
         for condition in conditions:
-            if not isinstance(condition, query.condition.Condition):
+            if not isinstance(condition, elysium.query.condition.Condition):
                 raise Exception()
         self._conditions |= set(conditions)
 
@@ -44,12 +44,12 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_joined_models(self, joined_model):
         if not isinstance(joined_model, type) or \
-                not issubclass(joined_model, models.Model):
+                not issubclass(joined_model, elysium.models.Model):
             raise Exception()
         self._joined_models.append(joined_model)
 
     def add_joined_conditions(self, joined_conditions):
-        if not isinstance(joined_conditions, query.condition.Condition):
+        if not isinstance(joined_conditions, elysium.query.condition.Condition):
             raise Exception()
         self._joined_conditions.append(joined_conditions)
 
@@ -58,7 +58,7 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_ordering_fields(self, *fields):
         for field in fields:
-            if not isinstance(field, models.Field):
+            if not isinstance(field, elysium.models.Field):
                 raise Exception()
             if field.model in self._models:
                 self._ordering_fields.append(field)

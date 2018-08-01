@@ -1,2 +1,2 @@
-from model import Model
-from field import *
+from elysium.models.model import Model
+from elysium.models.field import *

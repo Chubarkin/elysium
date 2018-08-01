@@ -1,9 +1,9 @@
 import mock
 import unittest
 
-from models import Model, Field
-from query import condition, commands
-from backends.postgresql.builder import PostgreSQLSelectQueryBuilder
+from elysium.models import Model, Field
+from elysium.query import condition, commands
+from elysium.backends.postgresql.builder import PostgreSQLSelectQueryBuilder
 
 
 class TestModel(Model):
@@ -21,7 +21,7 @@ class TestModelTwo(Model):
 class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
     def setUp(self):
         self._query_builder = PostgreSQLSelectQueryBuilder()
-        self._prefix = 'backends.postgresql.builder.PostgreSQLSelectQueryBuilder.'
+        self._prefix = 'elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder.'
 
     def test_add_tables(self):
         self._query_builder.add_model(TestModel)
@@ -38,7 +38,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder.add_models_from_fields()
         self.assertEqual(self._query_builder._models, {TestModel})
 
-    @mock.patch('query.condition.Condition.get_models')
+    @mock.patch('elysium.query.condition.Condition.get_models')
     def test_add_conditions(self, get_models):
         get_models.return_value = {TestModel}
         self._query_builder.add_conditions(TestModel.test_field_one == TestModelTwo.test_field_one)
@@ -76,8 +76,8 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder.add_ordering_fields(TestModelTwo.test_field_one)
         self.assertEqual(self._query_builder._ordering_fields, [TestModel.test_field_one])
 
-    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._add_commands')
-    @mock.patch('query.commands.SelectCommand.to_str')
+    @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._add_commands')
+    @mock.patch('elysium.query.commands.SelectCommand.to_str')
     def test_build(self, command_to_str, _add_commands):
         command_to_str.return_value = 'SELECT *'
         _add_commands.return_value = None
@@ -109,7 +109,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         for patch in patches:
             patch.stop()
 
-    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_fields_string')
+    @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_fields_string')
     def test__add_select_command(self, _get_fields_string):
         self._query_builder._commands = []
         _get_fields_string.return_value = '*'
@@ -121,7 +121,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._add_select_command()
         self.assertIsInstance(self._query_builder._commands[0], commands.SelectCommand)
 
-    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_tables_string')
+    @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_tables_string')
     def test__add_from_command(self, _get_tables_string):
         _get_tables_string.return_value = 'test'
         self._query_builder._add_from_command()
@@ -130,8 +130,8 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         _get_tables_string.return_value = ''
         self.assertRaises(Exception, self._query_builder._add_from_command)
 
-    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_string')
-    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_type_command')
+    @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_string')
+    @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_type_command')
     def test__add_join_commands(self, _get_join_type_command, _get_join_string):
         _get_join_string.return_value = 'test'
         _get_join_type_command.return_value = commands.RightCommand
@@ -146,7 +146,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._add_join_commands()
         self.assertIsInstance(self._query_builder._commands[0], commands.RightCommand)
 
-    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_conditions_string')
+    @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_conditions_string')
     def test__add_where_command(self, _get_conditions_string):
         _get_conditions_string.return_value = ''
         self._query_builder._add_where_command()
@@ -156,7 +156,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._add_where_command()
         self.assertIsInstance(self._query_builder._commands[0], commands.WhereCommand)
 
-    @mock.patch('backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_ordering_fields_string')
+    @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_ordering_fields_string')
     def test__add_order_by_command(self, _get_ordering_fields_string):
         _get_ordering_fields_string.return_value = ''
         self._query_builder._add_order_by_command()
@@ -166,9 +166,9 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._add_order_by_command()
         self.assertIsInstance(self._query_builder._commands[0], commands.OrderByCommand)
 
-    @mock.patch('backends.postgresql.constants.FIELDS_SPLITTER', ', ')
-    @mock.patch('backends.postgresql.constants.ALL_FIELDS_SELECTOR', '*')
-    @mock.patch('models.field.Field.to_str')
+    @mock.patch('elysium.backends.postgresql.constants.FIELDS_SPLITTER', ', ')
+    @mock.patch('elysium.backends.postgresql.constants.ALL_FIELDS_SELECTOR', '*')
+    @mock.patch('elysium.models.field.Field.to_str')
     def test__get_fields_string(self, to_str):
         fields_str = self._query_builder._get_fields_string()
         self.assertEqual(fields_str, '*')
@@ -182,7 +182,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         fields_str = self._query_builder._get_fields_string()
         self.assertEqual(fields_str, 'test, test')
 
-    @mock.patch('backends.postgresql.constants.TABLES_SPLITTER', ', ')
+    @mock.patch('elysium.backends.postgresql.constants.TABLES_SPLITTER', ', ')
     def test__get_tables_string(self):
         tables_str = self._query_builder._get_tables_string()
         self.assertEqual(tables_str, '')
@@ -200,9 +200,9 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         tables_str = self._query_builder._get_tables_string()
         self.assertEqual(tables_str, 'testmodeltwo')
 
-    @mock.patch('query.commands.JoinCommand.to_str')
-    @mock.patch('query.commands.OnCommand.to_str')
-    @mock.patch('query.condition.Condition.to_str')
+    @mock.patch('elysium.query.commands.JoinCommand.to_str')
+    @mock.patch('elysium.query.commands.OnCommand.to_str')
+    @mock.patch('elysium.query.condition.Condition.to_str')
     def test__get_join_string(self, condition_to_str, on_command_to_str, join_command_to_str):
         condition_to_str.return_value = 'test'
         on_command_to_str.return_value = 'ON'
@@ -214,8 +214,8 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self.assertEqual(join_command_to_str.call_count, 1)
         self.assertEqual(join_str, 'JOIN ON')
 
-    @mock.patch('backends.postgresql.constants.CONDITIONS_SPLITTER', ' AND ')
-    @mock.patch('query.condition.Condition.to_str')
+    @mock.patch('elysium.backends.postgresql.constants.CONDITIONS_SPLITTER', ' AND ')
+    @mock.patch('elysium.query.condition.Condition.to_str')
     def test__get_conditions_string(self, to_str):
         to_str.return_value = 'test'
         condition_str = self._query_builder._get_conditions_string()
@@ -229,10 +229,10 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         condition_str = self._query_builder._get_conditions_string()
         self.assertEqual(condition_str, 'test AND test')
 
-    @mock.patch('backends.postgresql.constants.FIELDS_SPLITTER', ', ')
-    @mock.patch('backends.postgresql.constants.ORDERING_FIELDS_TMPL', '%s %s')
-    @mock.patch('models.field.Field.to_str')
-    @mock.patch('query.commands.DescCommand.to_str')
+    @mock.patch('elysium.backends.postgresql.constants.FIELDS_SPLITTER', ', ')
+    @mock.patch('elysium.backends.postgresql.constants.ORDERING_FIELDS_TMPL', '%s %s')
+    @mock.patch('elysium.models.field.Field.to_str')
+    @mock.patch('elysium.query.commands.DescCommand.to_str')
     def test__get_ordering_fields_string(self, desc_to_str, field_to_str):
         field_to_str.return_value = 'test'
         desc_to_str.return_value = 'DESC'
@@ -248,7 +248,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         ordering_str = self._query_builder._get_ordering_fields_string()
         self.assertIn(ordering_str, 'test, test DESC')
 
-    @mock.patch('backends.postgresql.builder.const')
+    @mock.patch('elysium.backends.postgresql.builder.const')
     def test__get_join_type_command(self, constants):
         constants.INNER_JOIN_TYPE = 0
         constants.OUTER_JOIN_TYPE = 1

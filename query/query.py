@@ -1,13 +1,13 @@
 from abc import abstractmethod
 
-from query_meta import QueryMetaClass
+from elysium.query.query_meta import QueryMetaClass
 
 
 class Query(object):
     __metaclass__ = QueryMetaClass
 
     def __init__(self, query_type):
-        from factory import factory
+        from elysium.factory import factory
         self._query_builder = factory.get_query_builder(query_type)
 
     @abstractmethod

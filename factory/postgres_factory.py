@@ -1,11 +1,10 @@
-from abstract_factory import AbstractFactory
-from backends.postgresql.builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
-from backends.postgresql.query import PostgreSQLQuery
-from query.constants import SELECT_QUERY_TYPE, INSERT_QUERY_TYPE
+from elysium.factory.abstract_factory import AbstractFactory
+from elysium.query.constants import SELECT_QUERY_TYPE, INSERT_QUERY_TYPE
 
 
 class PostgresFactory(AbstractFactory):
     def get_query_builder(self, query_type):
+        from elysium.backends.postgresql.builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
         if query_type == SELECT_QUERY_TYPE:
             return PostgreSQLSelectQueryBuilder()
         elif query_type == INSERT_QUERY_TYPE:
@@ -13,8 +12,9 @@ class PostgresFactory(AbstractFactory):
         raise Exception()
 
     def get_query(self, query_type):
+        from elysium.backends.postgresql.query import PostgreSQLQuery
         return PostgreSQLQuery(query_type)
 
     def get_operators(self):
-        from backends.postgresql import operators
+        from elysium.backends.postgresql import operators
         return operators
