@@ -248,8 +248,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         ordering_str = self._query_builder._get_ordering_fields_string()
         self.assertIn(ordering_str, 'test, test DESC')
 
-    # TODO fix mocks
-    @mock.patch('backends.postgresql.constants')
+    @mock.patch('backends.postgresql.postgresql_builder.const')
     def test__get_join_type_command(self, constants):
         constants.INNER_JOIN_TYPE = 0
         constants.OUTER_JOIN_TYPE = 1
