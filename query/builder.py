@@ -18,7 +18,7 @@ class QueryBuilder(object):
 
 class SelectQueryBuilder(QueryBuilder):
     @abstractmethod
-    def add_models(self, models):
+    def add_model(self, model):
         pass
 
     @abstractmethod
@@ -43,6 +43,10 @@ class SelectQueryBuilder(QueryBuilder):
 
 
 class InsertQueryBuilder(QueryBuilder):
+    @abstractmethod
+    def add_model(self, model):
+        pass
+
     @abstractmethod
     def add_insertion_data(self, data):
         pass

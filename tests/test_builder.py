@@ -24,8 +24,8 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._prefix = 'backends.postgresql.postgresql_builder.PostgreSQLSelectQueryBuilder.'
 
     def test_add_tables(self):
-        self._query_builder.add_models(TestModel, TestModelTwo)
-        self.assertEqual(self._query_builder._models, {TestModel, TestModelTwo})
+        self._query_builder.add_model(TestModel)
+        self.assertEqual(self._query_builder._models, {TestModel})
 
     def test_add_fields(self):
         self._query_builder.add_fields(TestModel.test_field_one)

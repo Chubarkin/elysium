@@ -17,9 +17,8 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
         self._join_types = []
         self._ordering_fields = []
 
-    def add_models(self, *_models):
-        for model in _models:
-            self._models.add(model)
+    def add_model(self, model):
+        self._models.add(model)
 
     def add_fields(self, *fields):
         for field in fields:
@@ -145,7 +144,7 @@ class PostgreSQLInsertQueryBuilder(InsertQueryBuilder):
             self._insertion_fields.append(field)
             self._insertion_values.append(str(value))
 
-    def add_models(self, model):
+    def add_model(self, model):
         self._model = model
 
     def _add_commands(self):

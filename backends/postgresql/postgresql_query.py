@@ -9,7 +9,7 @@ class PostgreSQLQuery(Query):
         return self
 
     def set_model(self, model):
-        self._query_builder.add_models(model)
+        self._query_builder.add_model(model)
         return self
 
     def filter(self, *conditions):
