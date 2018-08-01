@@ -93,5 +93,5 @@ class TestPostrgreSQLQuery(unittest.TestCase):
     def test_sql(self, build):
         build.return_value = 'test'
         query = self.query.sql()
-        self.assertEqual(query, 'test1')
+        self.assertEqual(query, 'test')
 
