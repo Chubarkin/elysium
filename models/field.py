@@ -1,3 +1,5 @@
+from datetime import date
+
 from query.condition import ConditionMixin
 
 FIELD_NAME_TMPL = '%s.%s'
@@ -6,10 +8,17 @@ FIELD_NAME_TMPL = '%s.%s'
 class Field(ConditionMixin):
     _python_type = None
 
-    def __init__(self, field_name=None):
+    def __init__(self, null=False, blank=False,
+                 unique=False, primary_key=False,
+                 default=None):
         self._model = None
-        self._field_name = field_name
+        self._null = null
+        self._blank = blank
+        self._unique = unique
+        self._primary_key = primary_key
+        self._default = default
         self._descending = False
+        self._field_name = None
 
     def __get__(self, instance, owner):
         self.model = owner
@@ -50,3 +59,56 @@ class Field(ConditionMixin):
 
 class IntegerField(Field):
     _python_type = int
+
+    def __init__(self, serial=False, *args):
+        self._serial = serial
+        super(IntegerField, self).__init__(*args)
+
+
+class SmallIntegerField(Field):
+    _python_type = int
+
+    def __init__(self, serial=False, *args):
+        self._serial = serial
+        super(SmallIntegerField, self).__init__(*args)
+
+
+class BigIntegerField(Field):
+    _python_type = long
+
+    def __init__(self, serial=False, *args):
+        self._serial = serial
+        super(BigIntegerField, self).__init__(*args)
+
+
+class RealField(Field):
+    _python_type = float
+
+
+class DoubleField(Field):
+    _python_type = float
+
+
+class BooleanField(Field):
+    _python_type = bool
+
+
+class CharField(Field):
+    _python_type = str
+
+    def __init__(self, max_length, *args):
+        self._max_length = max_length
+        super(CharField, self).__init__(*args)
+
+
+class TextField(Field):
+    _python_type = str
+
+
+class DateField(Field):
+    _python_type = date
+
+
+__all__ = ['Field', 'IntegerField', 'SmallIntegerField', 'BigIntegerField',
+           'RealField', 'DoubleField', 'BooleanField', 'CharField',
+           'TextField', 'DateField']
