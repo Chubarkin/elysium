@@ -3,7 +3,7 @@ import unittest
 
 from elysium.models import Model, Field
 from elysium.query import condition, commands
-from elysium.backends.postgresql.builder import PostgreSQLSelectQueryBuilder
+from elysium.backends.postgresql.builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
 
 
 class TestModel(Model):
@@ -269,3 +269,45 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
 
         command = self._query_builder._get_join_type_command(None)
         self.assertEqual(command, commands.InnerCommand)
+
+
+class TestPostgreSQLInsertQueryBuilder(unittest.TestCase):
+    prefix = 'elysium.backends.postgresql.builder.PostgreSQLInsertQueryBuilder.'
+
+    def setUp(self):
+        self._query_builder = PostgreSQLInsertQueryBuilder()
+
+    def test_add_insertion_data(self):
+        self._query_builder.add_insertion_data({'field': 1})
+        self.assertEqual(self._query_builder._insertion_fields, ['field'])
+        self.assertEqual(self._query_builder._insertion_values, [1])
+
+    def test_add_model(self):
+        self._query_builder.add_model(TestModel)
+        self.assertEqual(self._query_builder._model, TestModel)
+
+    @mock.patch(prefix + '_add_insert_into_command')
+    @mock.patch(prefix + '_add_values_command')
+    def test__add_commands(self, _add_values_command, _add_insert_into_command):
+        self._query_builder._add_commands()
+        self.assertEqual(_add_insert_into_command.call_count, 1)
+        self.assertEqual(_add_values_command.call_count, 1)
+
+    def test__add_insert_into_command(self):
+        self._query_builder._add_insert_into_command()
+        self.assertEqual(self._query_builder._commands, [])
+
+        self._query_builder._insertion_fields.append('test')
+        self._query_builder._model = TestModel
+        self._query_builder._add_insert_into_command()
+        self.assertIsInstance(self._query_builder._commands[0],
+                              commands.InsertIntoCommand)
+
+    def test__add_values_command(self):
+        self._query_builder._add_values_command()
+        self.assertEqual(self._query_builder._commands, [])
+
+        self._query_builder._insertion_values.append('test')
+        self._query_builder._add_values_command()
+        self.assertIsInstance(self._query_builder._commands[0],
+                              commands.ValuesCommand)

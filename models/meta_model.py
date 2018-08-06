@@ -1,6 +1,5 @@
-# TODO try remove cycling imports
-from elysium.models.field import Field
 from elysium.factory import factory
+from elysium.models.field import Field
 from elysium.query.constants import SELECT_QUERY_TYPE
 
 

@@ -7,7 +7,6 @@ from elysium.query.builder import SelectQueryBuilder, InsertQueryBuilder
 from elysium.query import commands
 
 
-# TODO Split into classes for Select, Insert and etc.
 class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
     def __init__(self):
         super(PostgreSQLSelectQueryBuilder, self).__init__()
@@ -144,7 +143,7 @@ class PostgreSQLInsertQueryBuilder(InsertQueryBuilder):
         # TODO ADD validation and transformation
         for field, value in data.iteritems():
             self._insertion_fields.append(field)
-            self._insertion_values.append(str(value))
+            self._insertion_values.append(value)
 
     def add_model(self, model):
         self._model = model
@@ -154,10 +153,12 @@ class PostgreSQLInsertQueryBuilder(InsertQueryBuilder):
         self._add_values_command()
 
     def _add_insert_into_command(self):
-        table = self._model.__tablename__
-        self._commands.append(commands.InsertIntoCommand(
-            const.INSERTION_TMPL % (table, const.FIELDS_SPLITTER.join(self._insertion_fields))))
+        if self._model:
+            table = self._model.__tablename__
+            self._commands.append(commands.InsertIntoCommand(
+                const.INSERTION_TMPL % (table, const.FIELDS_SPLITTER.join(self._insertion_fields))))
 
     def _add_values_command(self):
-        self._commands.append(commands.ValuesCommand(
-            const.VALUES_TMPL % const.FIELDS_SPLITTER.join(self._insertion_values)))
+        if self._insertion_values:
+            self._commands.append(commands.ValuesCommand(
+                const.VALUES_TMPL % const.FIELDS_SPLITTER.join(self._insertion_values)))

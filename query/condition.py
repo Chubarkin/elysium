@@ -1,5 +1,5 @@
-from elysium.query.constants import CONDITION_TMPL
 from elysium.factory import factory
+from elysium.query.constants import CONDITION_TMPL
 from elysium.query.operand import Operand
 
 operators = factory.get_operators()
@@ -30,6 +30,7 @@ class ConditionMixin(object):
     def __lt__(self, other):
         return Condition(self, other, operators.LT)
 
+    # TODO FIX IT
     def contains(self, item):
         return Condition(item, self, operators.IN)
 

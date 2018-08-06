@@ -2,7 +2,7 @@ from elysium.factory.abstract_factory import AbstractFactory
 from elysium.query.constants import SELECT_QUERY_TYPE, INSERT_QUERY_TYPE
 
 
-class PostgresFactory(AbstractFactory):
+class PostgreSQLFactory(AbstractFactory):
     def get_query_builder(self, query_type):
         from elysium.backends.postgresql.builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
         if query_type == SELECT_QUERY_TYPE:

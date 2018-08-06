@@ -1,9 +1,9 @@
-from elysium.factory.postgres_factory import PostgresFactory
+from elysium.factory.postgresql_factory import PostgreSQLFactory
 from elysium import config
 
 
 if config['DATABASE']['DBMS'] == 'postgresql':
-    factory = PostgresFactory()
+    factory = PostgreSQLFactory()
 else:
     raise Exception()
 
