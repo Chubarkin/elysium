@@ -1,6 +1,7 @@
 import mock
 import unittest
 
+from elysium import exceptions
 from elysium.models import Model, Field
 from elysium.query import condition, commands
 from elysium.backends.postgresql.builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
@@ -31,7 +32,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder.add_fields(TestModel.test_field_one)
         self.assertEqual(self._query_builder._fields, {TestModel.test_field_one})
         # TODO Add exceptions
-        self.assertRaises(Exception, self._query_builder.add_fields, 'Not field instance')
+        self.assertRaises(exceptions.FieldError, self._query_builder.add_fields, 'Not field instance')
 
     def test_add_models_from_fields(self):
         self._query_builder._fields.add(TestModel.test_field_one)
@@ -44,7 +45,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder.add_conditions(TestModel.test_field_one == TestModelTwo.test_field_one)
         self.assertEqual(len(self._query_builder._conditions), 1)
         self.assertIsInstance(self._query_builder._conditions.pop(), condition.Condition)
-        self.assertRaises(Exception, self._query_builder.add_conditions, 'Not condition instance')
+        self.assertRaises(exceptions.ConditionError, self._query_builder.add_conditions, 'Not condition instance')
 
     def test_add_models_from_conditions(self):
         self._query_builder._conditions.add(TestModel.test_field_one == TestModelTwo.test_field_one)
@@ -54,13 +55,13 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
     def test_add_joined_models(self):
         self._query_builder.add_joined_models(TestModel)
         self.assertEqual(self._query_builder._joined_models, [TestModel])
-        self.assertRaises(Exception, self._query_builder.add_joined_models, 'Not model class')
+        self.assertRaises(exceptions.ModelError, self._query_builder.add_joined_models, 'Not model class')
 
     def test_add_joined_conditions(self):
         self._query_builder.add_joined_conditions(TestModel.test_field_one == TestModelTwo.test_field_one)
         self.assertEqual(len(self._query_builder._joined_conditions), 1)
         self.assertIsInstance(self._query_builder._joined_conditions[0], condition.Condition)
-        self.assertRaises(Exception, self._query_builder.add_joined_conditions, 'Not condition instance')
+        self.assertRaises(exceptions.ConditionError, self._query_builder.add_joined_conditions, 'Not condition instance')
 
     def test_add_join_types(self):
         self._query_builder.add_join_types(1)
@@ -72,7 +73,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self._query_builder._models.add(TestModel)
         self._query_builder.add_ordering_fields(TestModel.test_field_one)
         self.assertEqual(self._query_builder._ordering_fields, [TestModel.test_field_one])
-        self.assertRaises(Exception, self._query_builder.add_ordering_fields, 'Not field instance')
+        self.assertRaises(exceptions.FieldError, self._query_builder.add_ordering_fields, 'Not field instance')
         self._query_builder.add_ordering_fields(TestModelTwo.test_field_one)
         self.assertEqual(self._query_builder._ordering_fields, [TestModel.test_field_one])
 
@@ -128,7 +129,7 @@ class TestPostgreSQLSelectQueryBuilder(unittest.TestCase):
         self.assertIsInstance(self._query_builder._commands[0], commands.FromCommand)
 
         _get_tables_string.return_value = ''
-        self.assertRaises(Exception, self._query_builder._add_from_command)
+        self.assertRaises(exceptions.QueryBuilderError, self._query_builder._add_from_command)
 
     @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_string')
     @mock.patch('elysium.backends.postgresql.builder.PostgreSQLSelectQueryBuilder._get_join_type_command')

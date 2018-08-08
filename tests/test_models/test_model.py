@@ -1,6 +1,7 @@
 import mock
 import unittest
 
+from elysium import exceptions
 from elysium.backends.postgresql.query import PostgreSQLQuery
 from elysium.models import Model, Field
 
@@ -19,7 +20,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(instance.field_one, 1)
         self.assertEqual(instance.field_two, 'test')
 
-        self.assertRaises(Exception, self.model_class, field_one=1,
+        self.assertRaises(exceptions.FieldError, self.model_class, field_one=1,
                           field_two='test', field_three='wrong')
 
     @mock.patch('elysium.models.meta_model.ModelMetaClass.get_initial_query')

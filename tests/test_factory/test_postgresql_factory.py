@@ -1,6 +1,7 @@
 import mock
 import unittest
 
+from elysium import exceptions
 from elysium.backends.postgresql.builder import PostgreSQLSelectQueryBuilder, PostgreSQLInsertQueryBuilder
 from elysium.backends.postgresql.query import PostgreSQLQuery
 from elysium.factory.postgresql_factory import PostgreSQLFactory
@@ -19,7 +20,7 @@ class TestPostgreSQLFactory(unittest.TestCase):
         query_builder = self.factory.get_query_builder(1)
         self.assertIsInstance(query_builder, PostgreSQLInsertQueryBuilder)
 
-        self.assertRaises(Exception, self.factory.get_query_builder, 2)
+        self.assertRaises(exceptions.QueryTypeError, self.factory.get_query_builder, 2)
 
     @mock.patch('elysium.factory.postgresql_factory.PostgreSQLFactory.get_query_builder')
     def test_get_query(self, get_query_builder):

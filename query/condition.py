@@ -1,3 +1,4 @@
+from elysium.exceptions import ConditionError
 from elysium.factory import factory
 from elysium.query.constants import CONDITION_TMPL
 from elysium.query.operand import Operand
@@ -70,7 +71,10 @@ class Condition(ConditionMixin):
             and not (isinstance(left_operand, Condition)
                      and isinstance(right_operand, Condition)):
 
-            raise Exception()
+            raise ConditionError(
+                'The condition can not be constructed. '
+                'Are you sure that the condition is in parentheses?'
+            )
 
     @property
     def left_operand(self):

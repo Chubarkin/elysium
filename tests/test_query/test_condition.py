@@ -1,6 +1,7 @@
 import mock
 import unittest
 
+from elysium import exceptions
 from elysium.models import Model, Field
 from elysium.query.condition import Condition, ConditionMixin
 from elysium.query.operand import Operand
@@ -42,7 +43,7 @@ class TestCondition(unittest.TestCase):
     @mock.patch('elysium.query.condition.operators')
     def test__validate(self, _operators):
         _operators.AND = Operator('TEST_AND')
-        self.assertRaises(Exception, self.condition._validate,
+        self.assertRaises(exceptions.ConditionError, self.condition._validate,
                           TestModelTwo.test_field_one, TestModelTwo.test_field_two, _operators.AND)
 
 

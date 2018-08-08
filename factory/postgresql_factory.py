@@ -1,3 +1,4 @@
+from elysium.exceptions import QueryTypeError
 from elysium.factory.abstract_factory import AbstractFactory
 from elysium.query.constants import SELECT_QUERY_TYPE, INSERT_QUERY_TYPE
 
@@ -9,7 +10,7 @@ class PostgreSQLFactory(AbstractFactory):
             return PostgreSQLSelectQueryBuilder()
         elif query_type == INSERT_QUERY_TYPE:
             return PostgreSQLInsertQueryBuilder()
-        raise Exception()
+        raise QueryTypeError('Unknown query type')
 
     def get_query(self, query_type):
         from elysium.backends.postgresql.query import PostgreSQLQuery
