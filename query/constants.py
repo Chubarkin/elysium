@@ -16,6 +16,8 @@ COMMAND_TMPL = '%s %s '
 STRING_TMPL = '"%s"'
 CONDITION_TMPL = '(%s %s %s)'
 
+SUBSTITUTION_TMPL = '%s'
+
 VALIDATED_OPERATIONS = {'join', 'on', 'sql'}
 
 NEXT_OPERATION = {

@@ -1,7 +1,7 @@
 from elysium.exceptions import ConditionError
 from elysium.factory import factory
 from elysium.query.constants import CONDITION_TMPL
-from elysium.query.operand import Operand
+from elysium.query.operand import Operand, EmptyOperand
 
 operators = factory.get_operators()
 
@@ -32,14 +32,14 @@ class ConditionMixin(object):
         return Condition(self, other, operators.LT)
 
     # TODO FIX IT
-    def contains(self, item):
-        return Condition(item, self, operators.IN)
+    def in_(self, iterable):
+        return Condition(self, iterable, operators.IN)
 
     def is_null(self):
-        return Condition(self, None, operators.IS_NULL)
+        return Condition(self, EmptyOperand(), operators.IS_NULL)
 
     def is_not_null(self):
-        return Condition(self, None, operators.IS_NOT_NULL)
+        return Condition(self, EmptyOperand(), operators.IS_NOT_NULL)
 
 
 class Condition(ConditionMixin):
@@ -55,6 +55,21 @@ class Condition(ConditionMixin):
 
         return CONDITION_TMPL % (
             left_operand_str, self._operator.string_repr, right_operand_str)
+
+    def get_data(self, data=None):
+        if data is None:
+            data = []
+
+        self._add_operand_data(self._left_operand, data)
+        self._add_operand_data(self._right_operand, data)
+        return data
+
+    @staticmethod
+    def _add_operand_data(operand, data):
+        if operand.is_data():
+            data.append(operand.instance)
+        elif operand.is_condition():
+            operand.instance.get_data(data)
 
     def get_models(self):
         return self._get_models(Operand(self))

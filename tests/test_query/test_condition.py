@@ -23,9 +23,41 @@ class TestCondition(unittest.TestCase):
         self.condition = Condition(TestModel.test_field_one, TestModelTwo.test_field_two, Operator('='))
 
     @mock.patch('elysium.query.operand.Operand.to_str')
+    @mock.patch('elysium.query.condition.CONDITION_TMPL', '(%s %s %s)')
     def test_to_str(self, to_str):
         to_str.return_value = 'testmodel.test_field_one'
         self.assertEqual(self.condition.to_str(), '(testmodel.test_field_one = testmodel.test_field_one)')
+
+    @mock.patch('elysium.query.condition.Condition._add_operand_data')
+    def test_get_data(self, _add_operand_data):
+        self.condition.get_data()
+        self.assertEqual(_add_operand_data.call_count, 2)
+
+    @mock.patch('elysium.query.operand.Operand.is_data')
+    @mock.patch('elysium.query.operand.Operand.is_condition')
+    @mock.patch('elysium.query.condition.Condition.get_data')
+    def test__add_operand_data(self, get_data, is_condition, is_data):
+        get_data.return_value = None
+        operand = Operand(self.condition)
+        is_data.return_value = True
+        data = []
+        self.condition._add_operand_data(operand, data)
+        self.assertEqual(get_data.call_count, 0)
+        self.assertEqual(operand.instance, data[0])
+
+        is_data.return_value = False
+        is_condition.return_value = True
+        data = []
+        self.condition._add_operand_data(operand, data)
+        self.assertEqual(get_data.call_count, 1)
+        self.assertEqual(data, [])
+
+        is_data.return_value = False
+        is_condition.return_value = False
+        get_data.call_count = 0
+        self.condition._add_operand_data(operand, data)
+        self.assertEqual(get_data.call_count, 0)
+        self.assertEqual(data, [])
 
     @mock.patch('elysium.query.condition.Condition._get_models')
     def test_get_models(self, _get_models):
@@ -109,9 +141,9 @@ class TestConditionMixin(unittest.TestCase):
         self.assertIsInstance(condition, Condition)
         self.assertEqual(condition._operator, self.operators.LT)
 
-    def test_contains(self):
+    def test_in_(self):
         self.operators.IN = Operator('TEST_IN')
-        condition = self.first_instance.contains([1, 2, 3])
+        condition = self.first_instance.in_([1, 2, 3])
         self.assertIsInstance(condition, Condition)
         self.assertEqual(condition._operator, self.operators.IN)
 
