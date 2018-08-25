@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-
-import elysium.backends.postgresql.constants as const
+from elysium.backends.postgresql import constants as const
 from elysium.query.query import Query
 
 

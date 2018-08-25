@@ -31,7 +31,6 @@ class ConditionMixin(object):
     def __lt__(self, other):
         return Condition(self, other, operators.LT)
 
-    # TODO FIX IT
     def in_(self, iterable):
         return Condition(self, iterable, operators.IN)
 

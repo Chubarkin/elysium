@@ -1,13 +1,8 @@
-class BaseError(Exception):
-    def __repr__(self):
-        return self.__class__.__name__
-
-
 class ConditionError(Exception):
     pass
 
 
-class ConfigurationError(BaseError):
+class ConfigurationError(Exception):
     pass
 
 
@@ -25,5 +20,3 @@ class QueryBuilderError(Exception):
 
 class QueryTypeError(Exception):
     pass
-
-# __all__ = ['ConditionError']

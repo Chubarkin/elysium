@@ -1,11 +1,9 @@
-from __future__ import absolute_import
-
-import elysium.backends.postgresql.constants as const
-import elysium.models
-import elysium.query.condition
+from elysium import models
+from elysium.backends.postgresql import constants as const
 from elysium.exceptions import FieldError, ConditionError, ModelError, QueryBuilderError
-from elysium.query.builder import SelectQueryBuilder, InsertQueryBuilder
 from elysium.query import commands
+from elysium.query.condition import Condition
+from elysium.query.builder import SelectQueryBuilder, InsertQueryBuilder
 
 
 class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
@@ -24,7 +22,7 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_fields(self, *fields):
         for field in fields:
-            if not isinstance(field, elysium.models.Field):
+            if not isinstance(field, models.Field):
                 raise FieldError('%s is not instance of Field' % field)
         self._fields |= set(fields)
 
@@ -34,7 +32,7 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_conditions(self, *conditions):
         for condition in conditions:
-            if not isinstance(condition, elysium.query.condition.Condition):
+            if not isinstance(condition, Condition):
                 raise ConditionError('%s is not instance of Condition' % condition)
         self._conditions |= set(conditions)
 
@@ -44,12 +42,12 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_joined_models(self, joined_model):
         if not isinstance(joined_model, type) or \
-                not issubclass(joined_model, elysium.models.Model):
+                not issubclass(joined_model, models.Model):
             raise ModelError('%s is not subclass of Model' % joined_model)
         self._joined_models.append(joined_model)
 
     def add_joined_conditions(self, joined_conditions):
-        if not isinstance(joined_conditions, elysium.query.condition.Condition):
+        if not isinstance(joined_conditions, Condition):
             raise ConditionError('%s is not instance of Condition' % joined_conditions)
         self._joined_conditions.append(joined_conditions)
 
@@ -58,7 +56,7 @@ class PostgreSQLSelectQueryBuilder(SelectQueryBuilder):
 
     def add_ordering_fields(self, *fields):
         for field in fields:
-            if not isinstance(field, elysium.models.Field):
+            if not isinstance(field, models.Field):
                 raise FieldError('%s is not instance of Field' % field)
             if field.model in self._models:
                 self._ordering_fields.append(field)
